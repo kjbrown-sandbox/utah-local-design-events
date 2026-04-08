@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Design Events Near Saratoga Springs, UT</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; }
+
+    header { text-align: center; margin-bottom: 2rem; }
+    header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+    header p { color: #6e6e73; font-size: 0.95rem; }
+
+    /* Filters */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .filter-btn {
+      border: 1px solid #d2d2d7;
+      background: #fff;
+      color: #1d1d1f;
+      padding: 0.4rem 0.85rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover { border-color: #0071e3; color: #0071e3; }
+    .filter-btn.active { background: #0071e3; color: #fff; border-color: #0071e3; }
+
+    /* Cards */
+    .cards { display: grid; gap: 1rem; }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transition: box-shadow 0.15s;
+    }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .card-header h2 { font-size: 1.1rem; font-weight: 600; }
+    .card-header h2 a { color: inherit; text-decoration: none; }
+    .card-header h2 a:hover { color: #0071e3; }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .badge-conference { background: #e8d5f5; color: #6b21a8; }
+    .badge-meetup { background: #d1fae5; color: #065f46; }
+    .badge-festival { background: #fef3c7; color: #92400e; }
+    .badge-competition { background: #fce7f3; color: #9d174d; }
+    .badge-exhibit { background: #dbeafe; color: #1e40af; }
+    .badge-webinar { background: #e0e7ff; color: #3730a3; }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 1rem;
+      font-size: 0.85rem;
+      color: #6e6e73;
+      margin-bottom: 0.5rem;
+    }
+    .card-meta span::before {
+      margin-right: 0.3rem;
+    }
+
+    .card-description {
+      font-size: 0.9rem;
+      color: #424245;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-price {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin-bottom: 0.6rem;
+    }
+
+    .topics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+    .topic {
+      font-size: 0.7rem;
+      background: #f5f5f7;
+      color: #6e6e73;
+      padding: 0.15rem 0.5rem;
+      border-radius: 100px;
+    }
+
+    .card-link {
+      display: inline-block;
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      color: #0071e3;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .card-link:hover { text-decoration: underline; }
+
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #6e6e73;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      font-size: 0.8rem;
+      color: #86868b;
+    }
+
+    @media (min-width: 640px) {
+      .cards { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Digital Design Events</h1>
+      <p>Near Saratoga Springs, UT &mdash; local meetups, conferences, and virtual events</p>
+    </header>
+
+    <div class="filters" id="filters"></div>
+    <div class="cards" id="cards"></div>
+    <div class="empty" id="empty" style="display:none;">No events match that filter.</div>
+
+    <footer>
+      <p>Last updated April 2026. Events may change &mdash; check links for latest info.</p>
+    </footer>
+  </div>
+
+<script>
+const EVENTS = [
+  {
+    "name": "Front Conference",
+    "type": "Conference",
+    "topics": ["UX Design", "Product Design", "Design Research", "Interaction Design"],
+    "date": "TBD 2026",
+    "location": "Salt Lake City, UT",
+    "distance": "~45 min",
+    "url": "https://www.frontutah.com/",
+    "description": "Two-day UX and product management case study conference. In its 10th year, Front brings 1,000+ designers and PMs together for deep dives into solving real product problems.",
+    "price": "TBD",
+    "isLocal": true
+  },
+  {
+    "name": "Salt Lake Design Week",
+    "type": "Festival",
+    "topics": ["Graphic Design", "UI/UX Design", "Typography", "Brand Design", "Motion Design", "Product Design"],
+    "date": "Oct 5\u20139, 2026",
+    "location": "Salt Lake City, UT",
+    "distance": "~45 min",
+    "url": "https://www.sldesignweek.org/",
+    "description": "A week-long celebration of design in Salt Lake City featuring talks, workshops, exhibits, and networking events across all design disciplines.",
+    "price": "Varies by event",
+    "isLocal": true
+  },
+  {
+    "name": "AIGA SLC 100 Show",
+    "type": "Competition",
+    "topics": ["Graphic Design", "Brand Design", "Typography", "Illustration", "Web Design", "Motion Design"],
+    "date": "Oct 23\u201327, 2026",
+    "location": "Salt Lake City, UT",
+    "distance": "~45 min",
+    "url": "https://aigaslc100show.com/",
+    "description": "Utah's premier juried design competition. 100 pieces are selected for exhibit, with 10 awarded the Copper Ingot. Awards party, cocktails, tacos, and networking with top Utah designers.",
+    "price": "Free to attend, entry fee to submit",
+    "isLocal": true
+  },
+  {
+    "name": "Utah Design Exhibit",
+    "type": "Exhibit",
+    "topics": ["Graphic Design", "Brand Design", "Typography", "Illustration", "Web Design"],
+    "date": "Oct 2026 (during SLDW)",
+    "location": "Salt Lake City, UT",
+    "distance": "~45 min",
+    "url": "https://utahdesignexhibit.com/",
+    "description": "Annual showcase of outstanding design work from Utah creatives, held during Salt Lake Design Week.",
+    "price": "Free",
+    "isLocal": true
+  },
+  {
+    "name": "Product Hive",
+    "type": "Meetup",
+    "topics": ["Product Design", "UX Design", "Design Research", "Interaction Design"],
+    "date": "Ongoing (monthly)",
+    "location": "Provo / Salt Lake City, UT",
+    "distance": "~20\u201345 min",
+    "url": "https://www.meetup.com/producthive_ut/",
+    "description": "Utah's largest product community with 7,700+ members. Volunteer-led speakers, workshops, and company visits for designers, PMs, and strategists.",
+    "price": "Free",
+    "isLocal": true
+  },
+  {
+    "name": "Salt Lake Designers",
+    "type": "Meetup",
+    "topics": ["UI/UX Design", "Web Design", "Product Design", "Graphic Design"],
+    "date": "Ongoing",
+    "location": "Salt Lake City, UT",
+    "distance": "~45 min",
+    "url": "https://www.meetup.com/saltlakedesigners/",
+    "description": "Community of 1,300+ product, web, app, and program designers sharing ideas for new tools and techniques. Regular meetups and skill-sharing sessions.",
+    "price": "Free",
+    "isLocal": true
+  },
+  {
+    "name": "ProductTank Salt Lake City",
+    "type": "Meetup",
+    "topics": ["Product Design", "UX Design", "Design Thinking", "Interaction Design"],
+    "date": "Ongoing",
+    "location": "Salt Lake City, UT",
+    "distance": "~45 min",
+    "url": "https://www.meetup.com/producttank-salt-lake-city/",
+    "description": "Part of the global ProductTank network. Talks from guest speakers, networking, and conversations about product design, development, and UX.",
+    "price": "Free",
+    "isLocal": true
+  },
+  {
+    "name": "UtahJS",
+    "type": "Meetup",
+    "topics": ["Web Design", "Creative Coding", "Design Systems", "Front-end Development"],
+    "date": "Ongoing",
+    "location": "Lehi / Salt Lake City, UT",
+    "distance": "~15\u201345 min",
+    "url": "https://www.meetup.com/utahjs/",
+    "description": "Utah's JavaScript and web development community with meetups in Lehi and SLC. Covers front-end, design systems, and creative coding \u2014 the technical side of digital design.",
+    "price": "Free",
+    "isLocal": true
+  },
+  {
+    "name": "AIGA Salt Lake City",
+    "type": "Meetup",
+    "topics": ["Graphic Design", "Typography", "Brand Design", "Illustration", "Design Careers"],
+    "date": "Ongoing",
+    "location": "Salt Lake City, UT",
+    "distance": "~45 min",
+    "url": "https://saltlakecity.aiga.org/",
+    "description": "The local chapter of AIGA (the professional association for design). Regular events, portfolio reviews, mentorship, and networking for Utah's design community.",
+    "price": "Free (AIGA membership optional)",
+    "isLocal": true
+  },
+  {
+    "name": "CreativePro Week",
+    "type": "Conference",
+    "topics": ["Graphic Design", "Typography", "Illustration", "Motion Design", "Design Tools"],
+    "date": "Jun 29 \u2013 Jul 3, 2026",
+    "location": "Virtual (+ Nashville, TN)",
+    "distance": "Virtual",
+    "url": "https://www.creativeproweek.com/",
+    "description": "Five days of expert-led sessions on InDesign, Photoshop, Illustrator, presentation design, typography, and production workflows. Full virtual attendance option available.",
+    "price": "~$499\u2013$999",
+    "isLocal": false
+  },
+  {
+    "name": "Figma Config",
+    "type": "Conference",
+    "topics": ["UI/UX Design", "Design Systems", "Product Design", "Interaction Design", "Design Tools"],
+    "date": "Jun 23\u201325, 2026",
+    "location": "Virtual (+ San Francisco, CA)",
+    "distance": "Virtual",
+    "url": "https://config.figma.com/",
+    "description": "Figma's annual conference for 10,000+ designers, developers, and product leaders. Keynotes, workshops, and product announcements. Livestream available.",
+    "price": "Free (livestream), ~$799 (in-person)",
+    "isLocal": false
+  },
+  {
+    "name": "AIGA National Webinars",
+    "type": "Webinar",
+    "topics": ["Graphic Design", "Design Careers", "Design Thinking", "Typography", "Brand Design"],
+    "date": "Ongoing (monthly)",
+    "location": "Virtual",
+    "distance": "Virtual",
+    "url": "https://www.aiga.org/events",
+    "description": "Monthly virtual sessions from AIGA national \u2014 inspiration, leadership development, and connection with designers across the country.",
+    "price": "Free",
+    "isLocal": false
+  }
+];
+
+// Get unique types and build filters
+const types = ["All", "Local", "Virtual", ...new Set(EVENTS.map(e => e.type))];
+const filtersEl = document.getElementById("filters");
+const cardsEl = document.getElementById("cards");
+const emptyEl = document.getElementById("empty");
+
+let activeFilter = "All";
+
+function renderFilters() {
+  filtersEl.innerHTML = types.map(t =>
+    `<button class="filter-btn${t === activeFilter ? " active" : ""}" data-filter="${t}">${t}</button>`
+  ).join("");
+}
+
+function matchesFilter(event) {
+  if (activeFilter === "All") return true;
+  if (activeFilter === "Local") return event.isLocal;
+  if (activeFilter === "Virtual") return !event.isLocal;
+  return event.type === activeFilter;
+}
+
+function badgeClass(type) {
+  return "badge badge-" + type.toLowerCase();
+}
+
+function renderCards() {
+  const filtered = EVENTS.filter(matchesFilter);
+  emptyEl.style.display = filtered.length === 0 ? "block" : "none";
+
+  cardsEl.innerHTML = filtered.map(e => `
+    <div class="card">
+      <div class="card-header">
+        <h2><a href="${e.url}" target="_blank" rel="noopener">${e.name}</a></h2>
+        <span class="${badgeClass(e.type)}">${e.type}</span>
+      </div>
+      <div class="card-meta">
+        <span>${e.date}</span>
+        <span>${e.location}</span>
+        <span>${e.distance}</span>
+      </div>
+      <p class="card-description">${e.description}</p>
+      <p class="card-price">Price: ${e.price}</p>
+      <div class="topics">
+        ${e.topics.map(t => `<span class="topic">${t}</span>`).join("")}
+      </div>
+      <a class="card-link" href="${e.url}" target="_blank" rel="noopener">Visit website &rarr;</a>
+    </div>
+  `).join("");
+}
+
+filtersEl.addEventListener("click", (ev) => {
+  if (!ev.target.matches(".filter-btn")) return;
+  activeFilter = ev.target.dataset.filter;
+  renderFilters();
+  renderCards();
+});
+
+renderFilters();
+renderCards();
+</script>
+</body>
+</html>
